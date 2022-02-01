@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const {Schema, schema} = require("../models/secure/userValidation");
+const { schema } = require("../models/secure/userValidation");
 
 const userSchema = new mongoose.Schema({
     fullname: {
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
         items: [ 
             {
                 productId: {
-                    type: Schema.Types.ObjectId,
+                    type: mongoose.Schema.Types.ObjectId,
                     ref: "Product",
                     required: true,
                 },

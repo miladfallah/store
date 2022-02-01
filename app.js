@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const dotEnv = require('dotenv');
 
 const connectDB = require('./config/db');
+const { errorHandler } = require('./middlewares/errors');
 
 //Load Config
 dotEnv.config({ path: "./config/config.env"})
@@ -17,10 +18,16 @@ const app = express();
 
 //BodyParser
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
 
 //Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Routes
+app.use('/users', require('./routes/auth'))
+
+//Error Handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 try {
