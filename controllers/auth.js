@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { sendEmail } = require('../util/mailer.js');
 exports.handleLogin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -31,3 +32,30 @@ exports.handleLogin = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.handleSignUp = async(req, res, next) => {
+    let errArr = [];
+    try {
+        await User.userValidation(req.body);
+        const { fullname, email, password } = req.body;
+        const user = await User.findOne({ email });
+        if(user) {
+            const error = new Error ('کاربری با این ایمیل وجود دارد.');
+            error.statusCode = 422;
+            throw error;
+        };
+        await User.create({ fullname, email, password, cart: {items: []}});
+
+        sendEmail(
+            email,
+            fullname,
+            "به فروشگاه ما خوش امدید.",
+            "از خریدتون در فروشگاه اینترنتی ما لذت ببرید!"
+            );
+        res.status(201).json({message: "ثبت نام با موفقیت انجام شد."});
+
+        //* Sending Welcome Email
+    } catch (err) {
+        next(err);
+    }
+}

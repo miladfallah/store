@@ -7,4 +7,8 @@ const router = new Router();
 // @route POST users/login
 router.post("/login", auth.handleLogin);
 
+// @desc Handle SignUp
+// @route Post users/signUp
+router.post('/signUp', auth.handleSignUp);
+
 module.exports = router;
